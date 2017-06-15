@@ -152,6 +152,7 @@
             this.Controls.Add(this.SourceFolderButton);
             this.Name = "MainWindow";
             this.ShowInTaskbar = false;
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainWindow_FormClosing);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.ResumeLayout(false);

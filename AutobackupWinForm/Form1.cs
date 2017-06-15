@@ -158,5 +158,15 @@ namespace AutobackupWinForm
                 WindowState = FormWindowState.Minimized;
             }
         }
+
+        private void MainWindow_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (MessageBox.Show("If you close this application, automatic backup will not work.\nReally close ? ",
+                                "Auto backup tool",
+         MessageBoxButtons.YesNo) == DialogResult.No)
+            {
+                e.Cancel = true;
+            }
+        }
     }
 }

@@ -98,6 +98,12 @@ namespace AutobackupWinForm
                 return;
             }
 
+            // Ignore files in backup folder
+            if (e.FullPath.StartsWith(destDir))
+            {
+                return;
+            }
+
             saveFileQueue.Add(e.FullPath);
 
             // Perform backup

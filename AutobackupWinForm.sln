@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.26430.6
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutobackupWinForm", "AutobackupWinForm\AutobackupWinForm.csproj", "{3FE8C884-4C49-4DE6-9CF7-63C46715FF7E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutobackupWinFormTests", "AutobackupWinFormTests\AutobackupWinFormTests.csproj", "{645863A2-B7C4-4B95-BBA6-15ECC18DFBD3}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{3FE8C884-4C49-4DE6-9CF7-63C46715FF7E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3FE8C884-4C49-4DE6-9CF7-63C46715FF7E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3FE8C884-4C49-4DE6-9CF7-63C46715FF7E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3FE8C884-4C49-4DE6-9CF7-63C46715FF7E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{645863A2-B7C4-4B95-BBA6-15ECC18DFBD3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{645863A2-B7C4-4B95-BBA6-15ECC18DFBD3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{645863A2-B7C4-4B95-BBA6-15ECC18DFBD3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{645863A2-B7C4-4B95-BBA6-15ECC18DFBD3}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

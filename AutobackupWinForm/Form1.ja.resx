@@ -133,6 +133,12 @@
   <data name="label1.Location" type="System.Drawing.Point, System.Drawing">
     <value>12, 125</value>
   </data>
+  <data name="label1.Size" type="System.Drawing.Size, System.Drawing">
+    <value>154, 12</value>
+  </data>
+  <data name="label1.Text" xml:space="preserve">
+    <value>バックアップするファイルの拡張子</value>
+  </data>
   <data name="textBoxExtensions.Location" type="System.Drawing.Point, System.Drawing">
     <value>12, 140</value>
   </data>
@@ -214,6 +220,9 @@
         AA/9gAAP/YA8B/3APQf9gA2H/YANB/3v/Q/9//wP/YAcD/2APB/9//0//f/9//2AAf/9/43//f+b//3/
         l//8AA///AAf//////////////////////8=
 </value>
+  </data>
+  <data name="notifyIcon1.Text" xml:space="preserve">
+    <value>自動バックアップツール</value>
   </data>
   <data name="label4.Location" type="System.Drawing.Point, System.Drawing">
     <value>12, 9</value>

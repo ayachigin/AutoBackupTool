@@ -18,8 +18,14 @@ namespace AutobackupWinForm.Tests
         private AutoBackup Setup()
         {
             var pwd = Directory.GetCurrentDirectory();
-            string[] exts = { "hoge", "fuga" };
-            return new AutoBackup(pwd, pwd + "\\test", exts);
+            var dest = pwd + @"\test";
+            if (Directory.Exists(dest))
+            {
+                Directory.Delete(dest, true);
+            }
+            Directory.CreateDirectory(dest);
+            string[] exts = { "hoge", "fuga", "txt"};
+            return new AutoBackup(pwd,  dest, exts);
         }
 
         [TestMethod()]
@@ -34,6 +40,28 @@ namespace AutobackupWinForm.Tests
         {
             var a = Setup();
             a.Start();
+            var timeStr = a.GetTimeString();
+            var pwd = Directory.GetCurrentDirectory();
+            var input = "hogefuga" + timeStr;
+
+            System.IO.StreamWriter sw = new System.IO.StreamWriter(
+                pwd + @"\test.txt",
+                false,
+                System.Text.Encoding.GetEncoding("shift_jis"));
+            //TextBox1.Textの内容を書き込む
+            sw.Write(input);
+            //閉じる
+            sw.Close();
+            Console.WriteLine(pwd);
+            System.Threading.Thread.Sleep(6000);
+
+            var file = Directory.GetFiles(pwd + @"\test")[0];
+            StreamReader sr = new StreamReader(file,
+                                               System.Text.Encoding.GetEncoding("shift_jis"));
+            var output = sr.ReadToEnd();
+            sr.Close();
+
+            Assert.AreEqual(input, output);
         }
 
 
@@ -64,10 +92,10 @@ namespace AutobackupWinForm.Tests
         public void NewFileNameTest()
         {
             var a = Setup();
-            var now = DateTime.Now.ToString("yyyyMMddHHmmssfff");
-            var newFileName = a.NewFileName("C:\\foo\\bar\\piyo.moge");
+            var timeString = a.GetTimeString();
+            var newFileName = a.NewFileName("C:\\foo\\bar\\piyo.moge", timeString);
             var pwd = Directory.GetCurrentDirectory();
-            Assert.AreEqual(pwd + "\\test\\piyo" + now + ".moge", newFileName);
+            Assert.AreEqual(pwd + "\\test\\piyo" + timeString + ".moge", newFileName);
         }
     }
 }

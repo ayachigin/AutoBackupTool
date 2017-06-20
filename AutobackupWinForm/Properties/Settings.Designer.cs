@@ -26,6 +26,18 @@ namespace AutobackupWinForm.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("**")]
+        public string Extensions {
+            get {
+                return ((string)(this["Extensions"]));
+            }
+            set {
+                this["Extensions"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("**")]
         public string SourcePath {
             get {
                 return ((string)(this["SourcePath"]));
@@ -37,13 +49,25 @@ namespace AutobackupWinForm.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("**")]
-        public string Extensions {
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool ResizeImage {
             get {
-                return ((string)(this["Extensions"]));
+                return ((bool)(this["ResizeImage"]));
             }
             set {
-                this["Extensions"] = value;
+                this["ResizeImage"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool AutoBackup {
+            get {
+                return ((bool)(this["AutoBackup"]));
+            }
+            set {
+                this["AutoBackup"] = value;
             }
         }
     }

@@ -67,11 +67,15 @@ namespace AutobackupWinForm
             fswatcher.EnableRaisingEvents = false;
         }
 
-        public string NewFileName(string path)
+        public string GetTimeString()
+        {
+            return DateTime.Now.ToString("yyyyMMddHHmmssfff");
+        }
+
+        public string NewFileName(string path, string dateNum)
         {
             var baseName = Path.GetFileNameWithoutExtension(path);
             var ext = Path.GetExtension(path);
-            var dateNum = DateTime.Now.ToString("yyyyMMddHHmmssfff");
 
             return destDir + "\\" + baseName + dateNum + ext;
         }
@@ -99,7 +103,7 @@ namespace AutobackupWinForm
             }
 
             // Ignore files in backup folder
-            if (e.FullPath.StartsWith(destDir))
+            if (Path.GetDirectoryName(e.FullPath).StartsWith(destDir))
             {
                 return;
             }
@@ -107,10 +111,10 @@ namespace AutobackupWinForm
             saveFileQueue.Add(e.FullPath);
 
             // Perform backup
-            await AsyncCopy(e.FullPath, NewFileName(e.FullPath));
+            await AsyncCopy(e.FullPath, NewFileName(e.FullPath, GetTimeString()));
 
             Console.WriteLine("File: " + e.FullPath + " : " + e.ChangeType);
-            Console.WriteLine("New file: " + NewFileName(e.FullPath));
+            Console.WriteLine("New file: " + NewFileName(e.FullPath, GetTimeString()));
         }
 
         async Task AsyncCopy(string s, string d, int retryCount = 3)

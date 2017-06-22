@@ -26,7 +26,7 @@ namespace AutobackupWinForm
         private string originalTextSourceLabel;
         private string originalTextDestLabel;
         private ToolTip tooltip;
-        private AutoBackup autobackup;
+        private FileSystemWatcherManager fswmanager;
         private ResourceManager rm;
 
 
@@ -84,13 +84,13 @@ namespace AutobackupWinForm
             if (Directory.Exists(sourceFolder) &&
                 Directory.Exists(destinationFolder) &&
                 extensions != null &&
-                autobackup == null)
+                fswmanager == null)
             {
                 Properties.Settings.Default[SOURCE_PATH] = sourceFolder;
                 Properties.Settings.Default.Save();
                 var exts = extensions.Split('\n');
 
-                autobackup = new AutoBackup(sourceFolder, destinationFolder, exts);
+                fswmanager = new FileSystemWatcherManager(sourceFolder, destinationFolder, exts);
             }
         }
 
@@ -120,7 +120,7 @@ namespace AutobackupWinForm
             {
                 sourceFolder = dialog.SelectedPath;
                 SetTextAndTooltip(SourceFolderLabel, sourceFolder);
-                autobackup.SetPath(sourceFolder);
+                fswmanager.SourceFolder = sourceFolder;
                 StartBackup();
             }
             else
@@ -144,9 +144,9 @@ namespace AutobackupWinForm
             Properties.Settings.Default[EXTENSIONS] = this.extensions;
             Properties.Settings.Default.Save();
 
-            if (autobackup != null)
+            if (fswmanager != null)
             {
-                autobackup.SetExtensions(extensionArr);
+                fswmanager.Extensions = extensionArr;
             }
         }
 
@@ -170,6 +170,11 @@ namespace AutobackupWinForm
             {
                 e.Cancel = true;
             }
+        }
+
+        private void checkBox3_CheckedChanged(object sender, EventArgs e)
+        {
+            fswmanager.EnableAutoBackup = checkBox3.Checked;
         }
     }
 }

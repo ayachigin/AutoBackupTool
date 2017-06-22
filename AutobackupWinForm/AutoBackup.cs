@@ -9,7 +9,7 @@ using System.Threading;
 
 namespace AutobackupWinForm
 {
-    public class AutoBackup
+    public class AutoBackup : AutoWorker
     {
         /* AutoBackup
          * 
@@ -19,55 +19,30 @@ namespace AutobackupWinForm
          * To avoid this, autosave app ignores the file saved consecutively within 5 seconds.
          * 
          */
+        public bool Enable { set; get; }
 
-        private FileSystemWatcher fswatcher;
-        private string sourceDir;
-        private string destDir;
         private string[] exts;
         private List<string> saveFileQueue;
 
         public AutoBackup(string sourceDir, string destDir, string[] exts)
         {
-            this.sourceDir = sourceDir;
-            this.destDir = destDir;
+            SourceFolder = sourceDir;
+            DestinationFolder = destDir;
             this.exts = exts;
             this.saveFileQueue = new List<string>();
 
-            fswatcher = new FileSystemWatcher(sourceDir);
-
-            fswatcher.IncludeSubdirectories = true;
-            fswatcher.NotifyFilter = NotifyFilters.LastWrite
-                                   | NotifyFilters.FileName;
-
-            fswatcher.Changed += new FileSystemEventHandler(OnChanged);
-            fswatcher.Created += new FileSystemEventHandler(OnChanged);
-            fswatcher.Renamed += new RenamedEventHandler(OnRenamed);
-            //Console.WriteLine(e.FullPath.StartsWith(pwd));
-
-            Start();
         }
 
-        public void Start()
-        {
-            fswatcher.EnableRaisingEvents = true;
-        }
+        public string SourceFolder { set; get; }
 
-        public void SetPath(string path)
-        {
-            fswatcher.Path = path;
-        }
+        public string DestinationFolder { set; get; }
 
         public void SetExtensions(string[] extensions)
         {
             this.exts = extensions;
         }
 
-        public void Stop()
-        {
-            fswatcher.EnableRaisingEvents = false;
-        }
-
-        public string GetTimeString()
+        public static string GetTimeString()
         {
             return DateTime.Now.ToString("yyyyMMddHHmmssfff");
         }
@@ -77,11 +52,13 @@ namespace AutobackupWinForm
             var baseName = Path.GetFileNameWithoutExtension(path);
             var ext = Path.GetExtension(path);
 
-            return destDir + "\\" + baseName + dateNum + ext;
+            return DestinationFolder + @"\" + baseName + dateNum + ext;
         }
 
-        private async void OnChanged(object source, FileSystemEventArgs e)
+        public async void OnChanged(object source, FileSystemEventArgs e)
         {
+            if (!Enable) return;
+
             if (!File.Exists(e.FullPath)) return;
 
             var ext = Path.GetExtension(e.FullPath);
@@ -103,18 +80,19 @@ namespace AutobackupWinForm
             }
 
             // Ignore files in backup folder
-            if (Path.GetDirectoryName(e.FullPath).StartsWith(destDir))
+            if (Path.GetDirectoryName(e.FullPath)
+                    .StartsWith(DestinationFolder))
             {
                 return;
             }
 
             saveFileQueue.Add(e.FullPath);
 
-            // Perform backup
-            await AsyncCopy(e.FullPath, NewFileName(e.FullPath, GetTimeString()));
-
             Console.WriteLine("File: " + e.FullPath + " : " + e.ChangeType);
             Console.WriteLine("New file: " + NewFileName(e.FullPath, GetTimeString()));
+
+            // Perform backup
+            await AsyncCopy(e.FullPath, NewFileName(e.FullPath, GetTimeString()));
         }
 
         async Task AsyncCopy(string s, string d, int retryCount = 3)

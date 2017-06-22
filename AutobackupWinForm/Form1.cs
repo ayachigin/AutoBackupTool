@@ -9,7 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Collections.Specialized;
-
+using System.Resources;
 
 namespace AutobackupWinForm
 {
@@ -27,6 +27,7 @@ namespace AutobackupWinForm
         private string originalTextDestLabel;
         private ToolTip tooltip;
         private AutoBackup autobackup;
+        private ResourceManager rm;
 
 
         public MainWindow()
@@ -34,6 +35,8 @@ namespace AutobackupWinForm
             InitializeComponent();
             tooltip = new ToolTip();
             dialog = new FolderBrowserDialog();
+
+            rm = new ResourceManager("AutobackupWinForm.Resource", typeof(MainWindow).Assembly);
 
             // set default source folder to My Picture
             if ((string)Properties.Settings.Default[SOURCE_PATH] == "**")
@@ -161,9 +164,9 @@ namespace AutobackupWinForm
 
         private void MainWindow_FormClosing(object sender, FormClosingEventArgs e)
         {
-            if (MessageBox.Show("If you close this application, automatic backup will not work.\nReally close ? ",
-                                "Auto backup tool",
-         MessageBoxButtons.YesNo) == DialogResult.No)
+            if (MessageBox.Show(rm.GetString("MessageOnWindowClose"),
+                                rm.GetString("WindowTitle"),
+                                MessageBoxButtons.YesNo) == DialogResult.No)
             {
                 e.Cancel = true;
             }

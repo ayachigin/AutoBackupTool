@@ -46,7 +46,7 @@
             this.label4 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.checkBox3 = new System.Windows.Forms.CheckBox();
+            this.checkBoxAutobackup = new System.Windows.Forms.CheckBox();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.SuspendLayout();
@@ -67,11 +67,13 @@
             // 
             // SourceFolderLabel
             // 
+            this.SourceFolderLabel.AutoEllipsis = true;
             resources.ApplyResources(this.SourceFolderLabel, "SourceFolderLabel");
             this.SourceFolderLabel.Name = "SourceFolderLabel";
             // 
             // DestinationFolderLabel
             // 
+            this.DestinationFolderLabel.AutoEllipsis = true;
             resources.ApplyResources(this.DestinationFolderLabel, "DestinationFolderLabel");
             this.DestinationFolderLabel.Name = "DestinationFolderLabel";
             // 
@@ -94,12 +96,12 @@
             // 
             // groupBox1
             // 
-            resources.ApplyResources(this.groupBox1, "groupBox1");
             this.groupBox1.Controls.Add(this.checkBox2);
             this.groupBox1.Controls.Add(this.label3);
             this.groupBox1.Controls.Add(this.label2);
             this.groupBox1.Controls.Add(this.checkBox1);
             this.groupBox1.Controls.Add(this.textBox1);
+            resources.ApplyResources(this.groupBox1, "groupBox1");
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.TabStop = false;
             // 
@@ -142,8 +144,7 @@
             // 
             // groupBox2
             // 
-            resources.ApplyResources(this.groupBox2, "groupBox2");
-            this.groupBox2.Controls.Add(this.checkBox3);
+            this.groupBox2.Controls.Add(this.checkBoxAutobackup);
             this.groupBox2.Controls.Add(this.label4);
             this.groupBox2.Controls.Add(this.label5);
             this.groupBox2.Controls.Add(this.label1);
@@ -152,17 +153,18 @@
             this.groupBox2.Controls.Add(this.DestFolderButton);
             this.groupBox2.Controls.Add(this.SourceFolderLabel);
             this.groupBox2.Controls.Add(this.DestinationFolderLabel);
+            resources.ApplyResources(this.groupBox2, "groupBox2");
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.TabStop = false;
             // 
-            // checkBox3
+            // checkBoxAutobackup
             // 
-            resources.ApplyResources(this.checkBox3, "checkBox3");
-            this.checkBox3.Checked = true;
-            this.checkBox3.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBox3.Name = "checkBox3";
-            this.checkBox3.UseVisualStyleBackColor = true;
-            this.checkBox3.CheckedChanged += new System.EventHandler(this.checkBox3_CheckedChanged);
+            resources.ApplyResources(this.checkBoxAutobackup, "checkBoxAutobackup");
+            this.checkBoxAutobackup.Checked = true;
+            this.checkBoxAutobackup.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkBoxAutobackup.Name = "checkBoxAutobackup";
+            this.checkBoxAutobackup.UseVisualStyleBackColor = true;
+            this.checkBoxAutobackup.CheckedChanged += new System.EventHandler(this.checkBoxAutobackup_CheckedChanged);
             // 
             // MainWindow
             // 
@@ -173,6 +175,8 @@
             this.Name = "MainWindow";
             this.ShowInTaskbar = false;
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainWindow_FormClosing);
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.MainWindow_FormClosed);
+            this.Load += new System.EventHandler(this.MainWindow_Load);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.groupBox2.ResumeLayout(false);
@@ -198,7 +202,7 @@
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.GroupBox groupBox2;
-        private System.Windows.Forms.CheckBox checkBox3;
+        private System.Windows.Forms.CheckBox checkBoxAutobackup;
     }
 }
 

@@ -16,8 +16,10 @@ namespace AutobackupWinForm
 
     public partial class MainWindow : Form
     {
-        const string SOURCE_PATH = "SourcePath";
-        const string EXTENSIONS = "Extensions";
+        const string SOURCE_PATH      = "SourcePath";
+        const string DESTINATION_PATH = "DestinationPath";
+        const string EXTENSIONS       = "Extensions";
+        const string AUTOBACKUP       = "AutoBackup";
 
         private FolderBrowserDialog dialog;
         private string sourceFolder;
@@ -38,39 +40,9 @@ namespace AutobackupWinForm
 
             rm = new ResourceManager("AutobackupWinForm.Resource", typeof(MainWindow).Assembly);
 
-            // set default source folder to My Picture
-            if ((string)Properties.Settings.Default[SOURCE_PATH] == "**")
-            {
-                var myPicture = Environment.GetFolderPath(Environment.SpecialFolder.MyPictures);
-                Properties.Settings.Default[SOURCE_PATH] = myPicture;
-                Properties.Settings.Default.Save();
-            }
-
-            if ((string)Properties.Settings.Default[EXTENSIONS] == "**")
-            {
-                Properties.Settings.Default[EXTENSIONS] = textBoxExtensions.Text;
-                Properties.Settings.Default.Save();
-            }
-            else
-            {
-                textBoxExtensions.Text = (string)Properties.Settings.Default[EXTENSIONS];
-            }
-
-
-            sourceFolder = (string)Properties.Settings.Default[SOURCE_PATH];
 
             destinationFolder = Path.GetFullPath("./backup");
             Directory.CreateDirectory(destinationFolder);
-
-            originalTextSourceLabel = SourceFolderLabel.Text;
-            originalTextDestLabel = DestinationFolderLabel.Text;
-
-            SetTextAndTooltip(SourceFolderLabel, sourceFolder);
-            SetTextAndTooltip(DestinationFolderLabel, destinationFolder);
-
-            SetExtensions();
-
-            StartBackup();
         }
 
         private void SetTextAndTooltip(Control target, string text)
@@ -96,6 +68,7 @@ namespace AutobackupWinForm
 
         private void DestFolderButton_Click(object sender, EventArgs e)
         {
+            if (Directory.Exists(destinationFolder)) dialog.SelectedPath = destinationFolder;
             var result = dialog.ShowDialog(this);
 
             if (result == DialogResult.OK)
@@ -103,17 +76,25 @@ namespace AutobackupWinForm
                 destinationFolder =  dialog.SelectedPath;
                 SetTextAndTooltip(DestinationFolderLabel, destinationFolder);
                 StartBackup();
+                if (fswmanager != null)
+                {
+                    fswmanager.DestinationFolder = destinationFolder;
+                }
             }
             else
             {
-                SetTextAndTooltip(DestinationFolderLabel, originalTextDestLabel);
-                destinationFolder = null;
+                if (!Directory.Exists(destinationFolder))
+                {
+                    SetTextAndTooltip(DestinationFolderLabel, originalTextDestLabel);
+                    destinationFolder = null;
+                }
             }
 
         }
 
         private void SourceFolderButton_Click(object sender, EventArgs e)
         {
+            if (Directory.Exists(sourceFolder)) dialog.SelectedPath = sourceFolder;
             var result = dialog.ShowDialog(this);
 
             if (result == DialogResult.OK)
@@ -122,10 +103,18 @@ namespace AutobackupWinForm
                 SetTextAndTooltip(SourceFolderLabel, sourceFolder);
                 fswmanager.SourceFolder = sourceFolder;
                 StartBackup();
+                if (fswmanager != null)
+                {
+                    fswmanager.SourceFolder = sourceFolder;
+                }
             }
             else
             {
-                SetTextAndTooltip(SourceFolderLabel, originalTextSourceLabel);
+                if (!Directory.Exists(sourceFolder))
+                {
+                    SetTextAndTooltip(SourceFolderLabel, originalTextSourceLabel);
+                    sourceFolder = null;
+                }
             }
 
         }
@@ -139,10 +128,6 @@ namespace AutobackupWinForm
         {
             this.extensions = textBoxExtensions.Text;
             var extensionArr = extensions.Split('\n');
-            var stringCollection = new StringCollection();
-            stringCollection.AddRange(extensionArr);
-            Properties.Settings.Default[EXTENSIONS] = this.extensions;
-            Properties.Settings.Default.Save();
 
             if (fswmanager != null)
             {
@@ -172,9 +157,59 @@ namespace AutobackupWinForm
             }
         }
 
-        private void checkBox3_CheckedChanged(object sender, EventArgs e)
+        private void MainWindow_Load(object sender, EventArgs e)
         {
-            fswmanager.EnableAutoBackup = checkBox3.Checked;
+            sourceFolder = (string)Properties.Settings.Default[SOURCE_PATH];
+            destinationFolder = (string)Properties.Settings.Default[DESTINATION_PATH];
+            textBoxExtensions.Text = (string)Properties.Settings.Default[EXTENSIONS];
+            checkBoxAutobackup.Checked = (bool)Properties.Settings.Default[AUTOBACKUP];
+
+            // set default source folder to My Picture
+            if (!Directory.Exists(sourceFolder))
+            {
+                sourceFolder = Environment.GetFolderPath(Environment.SpecialFolder.MyPictures); 
+            }
+
+            if (!Directory.Exists(destinationFolder))
+            {
+                destinationFolder = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) +
+                                    @"\" + rm.GetString("DestinationFolderName");
+                if (!Directory.Exists(destinationFolder))
+                {
+                    Directory.CreateDirectory(destinationFolder);
+                }
+            }
+
+            if (extensions == "**")
+            {
+                extensions = textBoxExtensions.Text;
+            }
+            else
+            {
+                textBoxExtensions.Text = (string)Properties.Settings.Default[EXTENSIONS];
+            }
+
+            originalTextSourceLabel = SourceFolderLabel.Text;
+            originalTextDestLabel = DestinationFolderLabel.Text;
+
+            SetTextAndTooltip(SourceFolderLabel, sourceFolder);
+            SetTextAndTooltip(DestinationFolderLabel, destinationFolder);
+
+            StartBackup();
+        }
+
+        private void MainWindow_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            Properties.Settings.Default[SOURCE_PATH] = sourceFolder;
+            Properties.Settings.Default[DESTINATION_PATH] = destinationFolder;
+            Properties.Settings.Default[AUTOBACKUP] = checkBoxAutobackup.Checked;
+            Properties.Settings.Default[EXTENSIONS] = textBoxExtensions.Text;
+            Properties.Settings.Default.Save();
+        }
+
+        private void checkBoxAutobackup_CheckedChanged(object sender, EventArgs e)
+        {
+            fswmanager.EnableAutoBackup = checkBoxAutobackup.Checked;
         }
     }
 }

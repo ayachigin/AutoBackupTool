@@ -9,10 +9,13 @@
       <Value Profile="(Default)">**</Value>
     </Setting>
     <Setting Name="ResizeImage" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">False</Value>
+      <Value Profile="(Default)">True</Value>
     </Setting>
     <Setting Name="AutoBackup" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">False</Value>
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="DestinationPath" Type="System.String" Scope="User">
+      <Value Profile="(Default)">**</Value>
     </Setting>
   </Settings>
 </SettingsFile>

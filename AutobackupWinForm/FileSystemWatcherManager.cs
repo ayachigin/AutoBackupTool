@@ -84,9 +84,13 @@ namespace AutobackupWinForm
         {
             set
             {
-                if (this.IsReady)
+                if (value && this.IsReady)
                 {
                     fswatcher.EnableRaisingEvents = value;
+                }
+                else
+                {
+                    fswatcher.EnableRaisingEvents = false;
                 }
             }
 

@@ -30,6 +30,7 @@ namespace AutobackupWinForm
         private ToolTip tooltip;
         private FileSystemWatcherManager fswmanager;
         private ResourceManager rm;
+        private System.Timers.Timer timer;
 
 
         public MainWindow()
@@ -40,9 +41,33 @@ namespace AutobackupWinForm
 
             rm = new ResourceManager("AutobackupWinForm.Resource", typeof(MainWindow).Assembly);
 
+            timer = new System.Timers.Timer();
+            timer.Enabled = true;
+            timer.Elapsed += new System.Timers.ElapsedEventHandler(OnElapsed);
 
             destinationFolder = Path.GetFullPath("./backup");
             Directory.CreateDirectory(destinationFolder);
+        }
+
+
+        /**
+         * Check the source and destination folder existence
+         * When the folders ain't exists then stop filesystemwatcher
+         */
+        private void OnElapsed(object source, System.Timers.ElapsedEventArgs e)
+        {
+            if (sourceFolder == null ||
+                destinationFolder == null) return;
+
+            if (!Directory.Exists(sourceFolder))
+            {
+                fswmanager.Enable = false;   
+            }
+
+            if (!Directory.Exists(destinationFolder))
+            {
+                fswmanager.Enable = false;
+            }
         }
 
         private void SetTextAndTooltip(Control target, string text)

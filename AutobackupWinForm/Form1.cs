@@ -85,7 +85,7 @@ namespace AutobackupWinForm
             {
                 Properties.Settings.Default[SOURCE_PATH] = sourceFolder;
                 Properties.Settings.Default.Save();
-                var exts = extensions.Split('\n');
+                var exts = extensions.Split(new string[] { Environment.NewLine }, StringSplitOptions.None);
 
                 fswmanager = new FileSystemWatcherManager(sourceFolder, destinationFolder, exts);
             }
@@ -152,7 +152,7 @@ namespace AutobackupWinForm
         private void SetExtensions()
         {
             this.extensions = textBoxExtensions.Text;
-            var extensionArr = extensions.Split('\n');
+            var extensionArr = extensions.Split(new string[] { Environment.NewLine }, StringSplitOptions.None);
 
             if (fswmanager != null)
             {
@@ -228,7 +228,7 @@ namespace AutobackupWinForm
             Properties.Settings.Default[SOURCE_PATH] = sourceFolder;
             Properties.Settings.Default[DESTINATION_PATH] = destinationFolder;
             Properties.Settings.Default[AUTOBACKUP] = checkBoxAutobackup.Checked;
-            Properties.Settings.Default[EXTENSIONS] = textBoxExtensions.Text;
+            Properties.Settings.Default[EXTENSIONS] = extensions;
             Properties.Settings.Default.Save();
         }
 

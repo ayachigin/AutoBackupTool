@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -8,27 +9,83 @@ using System.Windows.Forms;
 
 namespace AutobackupWinForm
 {
-    class ImageResizer
+    class ImageResizer: AutoWorker
     {
         private Bitmap img;
+        private string sourceFolder;
+        private string destinationFolder;
+        private int longSide;
+        private bool transparentPixel;
+        private bool enable;
 
-        ImageResizer(string path)
+
+        public ImageResizer(string sourceFolder, string destinationFolder)
         {
-            try
+            enable = true;
+            this.sourceFolder = sourceFolder;
+            this.destinationFolder = destinationFolder + @"\thumbnails";
+            this.longSide = 1000;
+            this.transparentPixel = false;
+
+            if(!Directory.Exists(this.destinationFolder))
             {
-                img = new Bitmap(path);
-            } catch(ArgumentException e)
+                Directory.CreateDirectory(this.destinationFolder);
+            }
+
+        }
+
+        public bool Enable
+        {
+            get => enable;
+            set => enable = value;
+        }
+
+        public int LongSide
+        {
+            get
             {
-                MessageBox.Show("画像をリサイズしようとしましたが失敗しました。\n" + e);
+                return longSide;
+            }
+            set
+            {
+                longSide = value;
             }
         }
 
-        public Bitmap Resize(int longSide, bool transparentPixel)
+        public void OnChanged(object source, FileSystemEventArgs e)
+        {
+            System.Threading.Thread.Sleep(1000);
+            try
+            {
+                if (!Enable) return;
+
+                if (Path.GetExtension(e.FullPath) != ".png") return;
+
+                using (var fs = new FileStream(e.FullPath, FileMode.Open))
+                {
+                    img = new Bitmap(fs);
+                }
+
+                Resize().Save(destinationFolder + @"\" + Path.GetFileName(e.FullPath));
+            } catch(FileNotFoundException)
+            {
+                Console.Error.WriteLine("Failed resize image :" + e.FullPath);
+            }
+        }
+
+        public Bitmap Resize()
         {
             var width = img.Size.Width;
             var height = img.Size.Height;
-            var newWidth = width > height ? longSide : width / (height / longSide);
-            var newHeight = height > width ? longSide : height / (width / longSide);
+
+            if (width <= LongSide && height <= LongSide) return img;
+
+            int newWidth = width > height 
+                ? longSide
+                : (int)((double)width / ((double)height /(double) longSide));
+            int newHeight = height > width 
+                ? longSide 
+                : (int)((double)height / ((double)width / (double)longSide));
             //描画先とするImageオブジェクトを作成する
             Bitmap canvas = new Bitmap(newWidth, newHeight);
             //ImageオブジェクトのGraphicsオブジェクトを作成する
@@ -43,6 +100,6 @@ namespace AutobackupWinForm
             g.Dispose();
 
             return canvas;
-        }
+        }        
     }
 }

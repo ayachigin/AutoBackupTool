@@ -65,6 +65,11 @@ namespace AutobackupWinForm
                 fswatcher.Changed += new FileSystemEventHandler(autobackup.OnChanged);
                 fswatcher.Created += new FileSystemEventHandler(autobackup.OnChanged);
 
+                imageResizer = new ImageResizer(SourceFolder, DestinationFolder);
+
+                fswatcher.Changed += new FileSystemEventHandler(imageResizer.OnChanged);
+                fswatcher.Created += new FileSystemEventHandler(imageResizer.OnChanged);
+
                 Enable = true;
                 EnableAutoBackup = true;
             }
@@ -105,16 +110,36 @@ namespace AutobackupWinForm
         {
             set
             {
-                if (IsReady)
+                if (value && IsReady)
                 {
                     autobackup.Enable = value;
+                } else
+                {
+                    autobackup.Enable = false;
                 }
+
             }
 
             get
             {
                 return IsReady && autobackup.Enable;
             }
+        }
+
+        public bool EnableImageResizer {
+            set
+            {
+                if (value && IsReady)
+                {
+                    imageResizer.Enable = true;
+
+                }
+                else
+                {
+                    imageResizer.Enable = false;
+                }
+            }
+            get => imageResizer.Enable;
         }
     }
 

@@ -41,8 +41,8 @@
             this.checkBox2 = new System.Windows.Forms.CheckBox();
             this.label3 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
-            this.checkBox1 = new System.Windows.Forms.CheckBox();
-            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.checkBoxResizeImage = new System.Windows.Forms.CheckBox();
+            this.textBoxLongSide = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
@@ -99,8 +99,8 @@
             this.groupBox1.Controls.Add(this.checkBox2);
             this.groupBox1.Controls.Add(this.label3);
             this.groupBox1.Controls.Add(this.label2);
-            this.groupBox1.Controls.Add(this.checkBox1);
-            this.groupBox1.Controls.Add(this.textBox1);
+            this.groupBox1.Controls.Add(this.checkBoxResizeImage);
+            this.groupBox1.Controls.Add(this.textBoxLongSide);
             resources.ApplyResources(this.groupBox1, "groupBox1");
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.TabStop = false;
@@ -121,16 +121,18 @@
             resources.ApplyResources(this.label2, "label2");
             this.label2.Name = "label2";
             // 
-            // checkBox1
+            // checkBoxResizeImage
             // 
-            resources.ApplyResources(this.checkBox1, "checkBox1");
-            this.checkBox1.Name = "checkBox1";
-            this.checkBox1.UseVisualStyleBackColor = true;
+            resources.ApplyResources(this.checkBoxResizeImage, "checkBoxResizeImage");
+            this.checkBoxResizeImage.Name = "checkBoxResizeImage";
+            this.checkBoxResizeImage.UseVisualStyleBackColor = true;
+            this.checkBoxResizeImage.CheckedChanged += new System.EventHandler(this.checkBoxResizeImage_CheckedChanged);
             // 
-            // textBox1
+            // textBoxLongSide
             // 
-            resources.ApplyResources(this.textBox1, "textBox1");
-            this.textBox1.Name = "textBox1";
+            resources.ApplyResources(this.textBoxLongSide, "textBoxLongSide");
+            this.textBoxLongSide.Name = "textBoxLongSide";
+            this.textBoxLongSide.TextChanged += new System.EventHandler(this.textBoxLongSide_TextChanged);
             // 
             // label4
             // 
@@ -197,8 +199,8 @@
         private System.Windows.Forms.CheckBox checkBox2;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.CheckBox checkBox1;
-        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.CheckBox checkBoxResizeImage;
+        private System.Windows.Forms.TextBox textBoxLongSide;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.GroupBox groupBox2;

@@ -54,11 +54,11 @@ namespace AutobackupWinForm
 
         public void OnChanged(object source, FileSystemEventArgs e)
         {
+            if (!Enable) return;
+
             System.Threading.Thread.Sleep(1000);
             try
             {
-                if (!Enable) return;
-
                 if (Path.GetExtension(e.FullPath) != ".png") return;
 
                 using (var fs = new FileStream(e.FullPath, FileMode.Open))

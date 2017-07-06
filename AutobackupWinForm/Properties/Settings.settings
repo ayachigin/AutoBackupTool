@@ -17,5 +17,8 @@
     <Setting Name="DestinationPath" Type="System.String" Scope="User">
       <Value Profile="(Default)">**</Value>
     </Setting>
+    <Setting Name="LongSide" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">1000</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

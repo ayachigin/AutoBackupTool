@@ -141,6 +141,13 @@ namespace AutobackupWinForm
             }
             get => imageResizer.Enable;
         }
+
+        public int ImageSizeOfLongSide
+        {
+            set => imageResizer.LongSide = value;
+            get => imageResizer.LongSide;
+        }
+
     }
 
 }

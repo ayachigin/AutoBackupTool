@@ -20,6 +20,8 @@ namespace AutobackupWinForm
         const string DESTINATION_PATH = "DestinationPath";
         const string EXTENSIONS       = "Extensions";
         const string AUTOBACKUP       = "AutoBackup";
+        const string RESIZE_IMAGE     = "ResizeImage";
+        const string LONG_SIDE        = "LongSide";
 
         private FolderBrowserDialog dialog;
         private string sourceFolder;
@@ -88,6 +90,7 @@ namespace AutobackupWinForm
                 var exts = extensions.Split(new string[] { Environment.NewLine }, StringSplitOptions.None);
 
                 fswmanager = new FileSystemWatcherManager(sourceFolder, destinationFolder, exts);
+                applyValues();
             }
         }
 
@@ -188,6 +191,9 @@ namespace AutobackupWinForm
             destinationFolder = (string)Properties.Settings.Default[DESTINATION_PATH];
             textBoxExtensions.Text = (string)Properties.Settings.Default[EXTENSIONS];
             checkBoxAutobackup.Checked = (bool)Properties.Settings.Default[AUTOBACKUP];
+            checkBoxResizeImage.Checked = (bool)Properties.Settings.Default[RESIZE_IMAGE];
+            textBoxLongSide.Text = Properties.Settings.Default[LONG_SIDE].ToString();
+
 
             // set default source folder to My Picture
             if (!Directory.Exists(sourceFolder))
@@ -225,16 +231,51 @@ namespace AutobackupWinForm
 
         private void MainWindow_FormClosed(object sender, FormClosedEventArgs e)
         {
+            int longSide;
+
             Properties.Settings.Default[SOURCE_PATH] = sourceFolder;
             Properties.Settings.Default[DESTINATION_PATH] = destinationFolder;
             Properties.Settings.Default[AUTOBACKUP] = checkBoxAutobackup.Checked;
+            Properties.Settings.Default[RESIZE_IMAGE] = checkBoxResizeImage.Checked;
+            if (int.TryParse(textBoxLongSide.Text, out longSide))
+            {
+                Properties.Settings.Default[LONG_SIDE] = longSide;
+            } 
+            else
+            {
+                Properties.Settings.Default[LONG_SIDE] = 1000;
+            }
             Properties.Settings.Default[EXTENSIONS] = extensions;
             Properties.Settings.Default.Save();
         }
 
         private void checkBoxAutobackup_CheckedChanged(object sender, EventArgs e)
         {
+            applyValues();
+        }
+
+        private void checkBoxResizeImage_CheckedChanged(object sender, EventArgs e)
+        {
+            applyValues();
+        }
+
+        private void textBoxLongSide_TextChanged(object sender, EventArgs e)
+        {
+            applyValues();
+        }
+
+        private void applyValues()
+        {
+            if (fswmanager == null) return;
+
+            fswmanager.EnableImageResizer = checkBoxResizeImage.Checked;
             fswmanager.EnableAutoBackup = checkBoxAutobackup.Checked;
+            int longSide;
+
+            if (int.TryParse(textBoxLongSide.Text, out longSide))
+            {
+                fswmanager.ImageSizeOfLongSide = longSide;
+            }
         }
     }
 }
